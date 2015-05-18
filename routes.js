@@ -25,7 +25,6 @@ configRoutes = function ( app, server ) {
     response.contentType( 'json' );
     next();
   });
-
   app.get( '/:obj_type/list', function ( request, response ) {
     response.send({ title: request.params.obj_type + ' list' });
   });
