@@ -60,7 +60,7 @@ spa.chat = (function () {
 
       slider_open_time     : 250,
       slider_close_time    : 250,
-      slider_opened_em     : 50,
+      slider_opened_em     : 40,
       slider_closed_em     : 2,
       slider_opened_title  : '关闭',
       slider_closed_title  : '打开',

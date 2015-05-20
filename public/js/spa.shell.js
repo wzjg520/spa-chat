@@ -23,8 +23,8 @@ spa.shell = (function () {
       main_html : String()
         + '<div class="spa-shell-head">'
           + '<div class="spa-shell-head-logo">'
-            + '<h1>SPA</h1>'
-            + '<p>javascript end to end</p>'
+            + '<h1>花花聊天室</h1>'
+            + '<p>完全的javascript应用</p>'
           + '</div>'
           + '<div class="spa-shell-head-acct"></div>'
         + '</div>'
