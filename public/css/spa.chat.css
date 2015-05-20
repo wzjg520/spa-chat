@@ -7,7 +7,7 @@
   position      : absolute;
   bottom        : 0;
   right         : 0;
-  width         : 32em;
+  width         : 100em;
   height        : 2em;
   background    : #fff;
   border-radius : 0.5em 0 0 0;
@@ -102,14 +102,45 @@
 }
 
 .spa-chat-msg-log-msg {
-  background-color : #eee;
+  font-weight : 800;
+  margin: 5px;
+  float:left;
+  color: #484;
+  width : 100%;
 }
 
 .spa-chat-msg-log-me {
   font-weight : 800;
   color       : #484;
+  margin: 5px;
+  float : right;
+  width: 100%;
 }
 
+.spa-chat-msg-wrap {
+  padding : 8px;
+  border-radius: 8px;
+  display: inline-block;
+  max-width:60em;
+}
+.spa-chat-msg-log-me .spa-chat-msg-wrap{
+  background-color: #FAE371;
+  float:right;
+  margin-right: 5px;
+}
+.spa-chat-msg-log-msg .spa-chat-msg-wrap{
+  background-color: #FF7D6B;
+  float:left;
+  margin-left: 5px;
+}
+.spa-chat-msg-log-me .spa-chat-msg-sender{
+  float:right;
+  margin-bottom: 10px;
+}
+.spa-chat-msg-log-msg .spa-chat-msg-sender{
+  float:left;
+  margin-bottom: 10px;
+}
 .spa-chat-msg-log-alert {
   font-style  : italic;
   background  : #a88;

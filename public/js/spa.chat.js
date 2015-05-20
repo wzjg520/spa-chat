@@ -22,7 +22,7 @@ spa.chat = (function () {
           + '<div class="spa-chat-head">'
             + '<div class="spa-chat-head-toggle">+</div>'
             + '<div class="spa-chat-head-title">'
-              + 'Chat'
+              + '花花专用聊天室'
             + '</div>'
           + '</div>'
           + '<div class="spa-chat-closer">x</div>'
@@ -37,7 +37,7 @@ spa.chat = (function () {
                   + '<input type="text"/>'
                   + '<input type="submit" style="display:none"/>'
                   + '<div class="spa-chat-msg-send">'
-                    + 'send'
+                    + '发送'
                   + '</div>'
                 + '</form>'
               + '</div>'
@@ -60,10 +60,10 @@ spa.chat = (function () {
 
       slider_open_time     : 250,
       slider_close_time    : 250,
-      slider_opened_em     : 18,
+      slider_opened_em     : 50,
       slider_closed_em     : 2,
-      slider_opened_title  : 'Tap to close',
-      slider_closed_title  : 'Tap to open',
+      slider_opened_title  : '关闭',
+      slider_closed_title  : '打开',
       slider_opened_min_em : 10,
       window_height_min_em : 20,
 
@@ -233,14 +233,18 @@ spa.chat = (function () {
     );
   };
 
-  writeChat = function ( person_name, text, is_user ) {
+  writeChat = function ( person_name, text, is_user, msg_date ) {
     var msg_class = is_user
       ? 'spa-chat-msg-log-me' : 'spa-chat-msg-log-msg';
-
-    jqueryMap.$msg_log.append(
-      '<div class="' + msg_class + '">'
-      + spa.util_b.encodeHtml(person_name) + ': '
-      + spa.util_b.encodeHtml(text) + '</div>'
+    jqueryMap.$msg_log.append( 
+         '<div class="' + msg_class + '">'
+            + '<span class="spa-chat-msg-sender">'
+            + spa.util_b.encodeHtml(person_name) + '(' + spa.util_b.encodeHtml( msg_date ) + ')' 
+            + '</span>'
+            + '<span class="spa-chat-msg-wrap">'
+            + spa.util_b.encodeHtml(text) 
+            + '</span>'
+        + '</div>' 
     );
 
     scrollChat();
@@ -303,12 +307,12 @@ spa.chat = (function () {
     jqueryMap.$input.focus();
     if ( ! new_chatee ) {
       if ( old_chatee ) {
-        writeAlert( old_chatee.name + ' has left the chat' );
+        writeAlert( old_chatee.name + ' 已经离开聊天室' );
       }
       else {
-        writeAlert( 'Your friend has left the chat' );
+        writeAlert( '你的朋友已经离开聊天室' );
       }
-      jqueryMap.$title.text( 'Chat' );
+      jqueryMap.$title.text( '花花专用聊天室');
       return false;
     }
 
@@ -319,8 +323,8 @@ spa.chat = (function () {
       .find( '[data-id=' + arg_map.new_chatee.id + ']' )
       .addClass( 'spa-x-select' );
 
-    writeAlert( 'Now chatting with ' + arg_map.new_chatee.name );
-    jqueryMap.$title.text( 'Chat with ' + arg_map.new_chatee.name );
+    writeAlert( '现在和 ' + arg_map.new_chatee.name +' 聊天');
+    jqueryMap.$title.text( '和 ' + arg_map.new_chatee.name + ' 聊天');
     return true;
   };
 
@@ -349,8 +353,8 @@ spa.chat = (function () {
     if ( ! list_html ) {
       list_html = String()
         + '<div class="spa-chat-list-note">'
-        + 'To chat alone is the fate of all great souls...<br><br>'
-        + 'No one is online'
+        + '聊天室里很冷清...<br><br>'
+        + '无人在线'
         + '</div>';
       clearChat();
     }
@@ -363,6 +367,7 @@ spa.chat = (function () {
       is_user,
       sender_id = msg_map.sender_id,
       msg_text  = msg_map.msg_text,
+      msg_date = msg_map.date,
       chatee    = configMap.chat_model.get_chatee() || {},
       sender    = configMap.people_model.get_by_cid( sender_id );
 
@@ -377,7 +382,7 @@ spa.chat = (function () {
       configMap.chat_model.set_chatee( sender_id );
     }
 
-    writeChat( sender.name, msg_text, is_user );
+    writeChat( sender.name, msg_text, is_user,msg_date );
 
     if ( is_user ) {
       jqueryMap.$input.val( '' );
@@ -391,7 +396,7 @@ spa.chat = (function () {
 
   onLogout = function ( event, logout_user ) {
     configMap.set_chat_anchor( 'closed' );
-    jqueryMap.$title.text( 'Chat' );
+    jqueryMap.$title.text( '花花专用聊天室' );
     clearChat();
   };
 

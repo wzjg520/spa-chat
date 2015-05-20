@@ -225,7 +225,6 @@ spa.avtr = (function () {
   //
   initModule = function ( $container ) {
     setJqueryMap( $container );
-
     // bind model global events
     $.gevent.subscribe( $container, 'spa-setchatee',  onSetchatee  );
     $.gevent.subscribe( $container, 'spa-listchange', onListchange );

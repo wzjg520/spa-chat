@@ -15,6 +15,9 @@
 		"is_online" : {
 			"type" : "boolean"
 		},
+		"date" : {
+			"type" : "string"
+		},
 		"css_map" : {
 			"type" : "object",
 			"additionalProperties" : false,

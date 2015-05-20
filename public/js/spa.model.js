@@ -322,7 +322,7 @@ spa.model = (function () {
       if ( stateMap.is_connected ) { return false; }
 
       if ( stateMap.user.get_is_anon() ) {
-        console.warn( 'User must be defined before joining chat');
+        console.warn( '请先登陆' );
         return false;
       }
 
@@ -335,6 +335,7 @@ spa.model = (function () {
 
     send_msg = function ( msg_text ) {
       var msg_map,
+        date = new Date(),
         sio = isFakeData ? spa.fake.mockSio : spa.data.getSio();
 
       if ( ! sio ) { return false; }
@@ -344,7 +345,8 @@ spa.model = (function () {
         dest_id   : chatee.id,
         dest_name : chatee.name,
         sender_id : stateMap.user.id,
-        msg_text  : msg_text
+        msg_text  : msg_text,
+        date : date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate() + '   ' + date.getHours() + ':' + date.getMinutes()
       };
 
       // we published updatechat so we can show our outgoing messages

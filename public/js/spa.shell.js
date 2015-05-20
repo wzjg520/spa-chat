@@ -219,9 +219,9 @@ spa.shell = (function () {
   onTapAcct = function ( event ) {
     var acct_text, user_name, user = spa.model.people.get_user();
     if ( user.get_is_anon() ) {
-      user_name = prompt( 'Please sign-in' );
+      user_name = prompt( '请登录' );
       spa.model.people.login( user_name );
-      jqueryMap.$acct.text( '... processing ...' );
+      jqueryMap.$acct.text( '... 正在登陆 ...' );
     }
     else {
      spa.model.people.logout();
@@ -234,7 +234,7 @@ spa.shell = (function () {
   };
 
   onLogout = function ( event, logout_user ) {
-    jqueryMap.$acct.text( 'Please sign-in' );
+    jqueryMap.$acct.text( '请登录' );
   };
   //-------------------- END EVENT HANDLERS --------------------
 
@@ -315,7 +315,7 @@ spa.shell = (function () {
     $.gevent.subscribe( $container, 'spa-logout', onLogout );
 
     jqueryMap.$acct
-      .text( 'Please sign-in')
+      .text( '请登录')
       .bind( 'utap', onTapAcct );
   };
   // End PUBLIC method /initModule/
