@@ -23,10 +23,12 @@ spa.data = (function () {
     return {
       emit : function ( event_name, data ) {
         socket.emit( event_name, data );
+        console.log(event_name, data);
       },
       on   : function ( event_name, callback ) {
         socket.on( event_name, function (){
           callback( arguments );
+          console.log( event_name );
         });
       }
     };

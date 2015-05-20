@@ -99,6 +99,7 @@ spa.model = (function () {
     stateMap.user.id      = user_map._id;
     stateMap.user.css_map = user_map.css_map;
     stateMap.people_cid_map[ user_map._id ] = stateMap.user;
+    console.log('complete');
     chat.join();
     $.gevent.publish( 'spa-login', [ stateMap.user ] );
   };
@@ -160,9 +161,7 @@ spa.model = (function () {
         css_map : {top : 25, left : 25, 'background-color':'#8f8'},
         name    : name
       });
-
       sio.on( 'userupdate', completeLogin );
-
       sio.emit( 'adduser', {
         cid     : stateMap.user.cid,
         css_map : stateMap.user.css_map,
@@ -302,8 +301,8 @@ spa.model = (function () {
       else if ( msg_map.sender_id !== stateMap.user.id
         && msg_map.sender_id !== chatee.id
       ) { set_chatee( msg_map.sender_id ); }
-
       $.gevent.publish( 'spa-updatechat', [ msg_map ] );
+      console.log( 'self' );
     };
     // End internal methods
 
@@ -318,7 +317,6 @@ spa.model = (function () {
 
     join_chat  = function () {
       var sio;
-
       if ( stateMap.is_connected ) { return false; }
 
       if ( stateMap.user.get_is_anon() ) {
@@ -329,6 +327,7 @@ spa.model = (function () {
       sio = isFakeData ? spa.fake.mockSio : spa.data.getSio();
       sio.on( 'listchange', _publish_listchange );
       sio.on( 'updatechat', _publish_updatechat );
+      console.log('join_chat');
       stateMap.is_connected = true;
       return true;
     };
@@ -350,6 +349,7 @@ spa.model = (function () {
       };
 
       // we published updatechat so we can show our outgoing messages
+      console.log('send_msg');
       _publish_updatechat( [ msg_map ] );
       sio.emit( 'updatechat', msg_map );
       return true;
@@ -374,12 +374,6 @@ spa.model = (function () {
       return true;
     };
 
-    // avatar_update_map should have the form:
-    // { person_id : <string>, css_map : {
-    //   top : <int>, left : <int>,
-    //   'background-color' : <string>
-    // }};
-    //
     update_avatar = function ( avatar_update_map ) {
       var sio = isFakeData ? spa.fake.mockSio : spa.data.getSio();
       if ( sio ) {

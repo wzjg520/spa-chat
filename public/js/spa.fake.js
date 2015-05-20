@@ -130,6 +130,7 @@ spa.fake = (function () {
     // Stop trying after first success.
     send_listchange = function () {
       listchange_idto = setTimeout( function () {
+        console.log('fake');
         if ( callback_map.listchange ) {
           callback_map.listchange([ peopleList ]);
           emit_mock_msg();
@@ -140,7 +141,7 @@ spa.fake = (function () {
     };
 
     // We have to start the process ...
-    send_listchange();
+    //send_listchange();
 
     return { emit : emit_sio, on : on_sio };
   }());

@@ -145,6 +145,7 @@
   font-style  : italic;
   background  : #a88;
   color       : #fff;
+  clear : both;
 }
 
 .spa-chat-list-box {
