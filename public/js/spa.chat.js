@@ -222,7 +222,7 @@ spa.chat = (function () {
             + spa.util_b.encodeHtml(person_name) + '(' + spa.util_b.encodeHtml( msg_date ) + ')' 
             + '</span>'
             + '<p class="spa-chat-msg-wrap">'
-            + spa.util_b.encodeHtml(text).replace(/\[(a|b|c|d)_([0-9]+)\]/g,'<img src="'+'images/face/$1/$2.gif" border="0">') .replace( /(\r\n)|\n/g, '</br>' ).replace( /\s/g, '&nbsp;' )
+            + spa.util_b.encodeHtml(text).replace(/\[(a|b|c|d)_([0-9]+)\]/g,'<img src="'+'images/face/$1/$2.gif" border="0">') .replace( /(\r\n)|\n/g, '</br>' )
             + '</p>'
         + '</div>' 
     );
@@ -422,20 +422,9 @@ spa.chat = (function () {
     jqueryMap.$send.bind(     'utap', onSubmitMsg );
     jqueryMap.$form.bind(   'keyup', onSubmitMsg );
   };
-  // End public method /initModule/
 
-  // Begin public method /removeSlider/
-  // Purpose    :
-  //   * Removes chatSlider DOM element
-  //   * Reverts to initial state
-  //   * Removes pointers to callbacks and other data
-  // Arguments  : none
-  // Returns    : true
-  // Throws     : none
-  //
   removeSlider = function () {
-    // unwind initialization and state
-    // remove DOM container; this removes event bindings too
+
     if ( jqueryMap.$slider ) {
       jqueryMap.$slider.remove();
       jqueryMap = {};
