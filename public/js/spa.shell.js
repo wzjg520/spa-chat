@@ -215,6 +215,9 @@ spa.shell = (function() {
     //初始化spa.chat模块
     spa.chat.initModule(jqueryMap.$container);
 
+    //initModul spa.rl;
+    spa.rl.initModule();
+
     //配置头像模块
     spa.avtr.configModule({
       chat_model: spa.model.chat,

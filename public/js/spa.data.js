@@ -3,12 +3,6 @@
  * Data module
 */
 
-/*jslint         browser : true, continue : true,
-  devel  : true, indent  : 2,    maxerr   : 50,
-  newcap : true, nomen   : true, plusplus : true,
-  regexp : true, sloppy  : true, vars     : false,
-  white  : true
-*/
 /*global $, io, spa */
 
 spa.data = (function () {
@@ -20,16 +14,22 @@ spa.data = (function () {
   makeSio = function (){
     var socket = io.connect( '/chat' );
 
+
     return {
       emit : function ( event_name, data ) {
         socket.emit( event_name, data );
-        console.log(event_name, data);
+       return this;
       },
       on   : function ( event_name, callback ) {
-        socket.on( event_name, function (){
-          callback( arguments );
-          console.log( event_name );
-        });
+
+          socket.on( event_name, function (){
+            callback( arguments );
+          });
+          return this; 
+      },
+      unbind : function () {
+        socket.removeAllListeners();
+        return this;
       }
     };
   };

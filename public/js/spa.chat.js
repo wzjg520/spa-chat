@@ -3,12 +3,6 @@
  * Chat feature module for SPA
 */
 
-/*jslint         browser : true, continue : true,
-  devel  : true, indent  : 2,    maxerr   : 50,
-  newcap : true, nomen   : true, plusplus : true,
-  regexp : true, sloppy  : true, vars     : false,
-  white  : true
-*/
 
 /*global $, spa */
 
@@ -34,7 +28,21 @@ spa.chat = (function () {
               + '<div class="spa-chat-msg-log"></div>'
               + '<div class="spa-chat-msg-in">'
                 + '<form class="spa-chat-msg-form">'
-                  + '<input type="text"/>'
+                  + '<textarea id="rl_exp_input"></textarea>'
+                + '<a href="javascript:void(0);" id="rl_exp_btn" class="spa-chat-msg-face">表情<span class="face_arrow_top" style="display: none;"></span></a>'
+                + '<div class="rl_exp" id="rl_bq" style="display: none;">'
+                   + ' <ul class="rl_exp_tab clearfix">'
+                       + ' <li><a href="javascript:void(0);" class="selected">默认</a></li>'
+                        + '<li><a href="javascript:void(0);">拜年</a></li>'
+                        + '<li><a href="javascript:void(0);">浪小花</a></li>'
+                        + '<li><a href="javascript:void(0);">暴走漫画</a></li>'
+                    + '</ul>'
+                    + '<ul class="rl_exp_main clearfix rl_selected"></ul>'
+                    + '<ul class="rl_exp_main clearfix" style="display:none;"></ul>'
+                    + '<ul class="rl_exp_main clearfix" style="display:none;"></ul>'
+                    + '<ul class="rl_exp_main clearfix" style="display:none;"></ul>'
+                    + '<a href="javascript:void(0);" class="close">×</a>'
+                + '</div>'
                   + '<input type="submit" style="display:none"/>'
                   + '<div class="spa-chat-msg-send">'
                     + '发送'
@@ -55,7 +63,7 @@ spa.chat = (function () {
 
         chat_model      : true,
         people_model    : true,
-        set_chat_anchor : true
+        set_chat_anchor : true,
       },
 
       slider_open_time     : 250,
@@ -107,7 +115,7 @@ spa.chat = (function () {
       $list_box : $slider.find( '.spa-chat-list-box' ),
       $msg_log  : $slider.find( '.spa-chat-msg-log' ),
       $msg_in   : $slider.find( '.spa-chat-msg-in' ),
-      $input    : $slider.find( '.spa-chat-msg-in input[type=text]'),
+      $input    : $slider.find( '.spa-chat-msg-in textarea'),
       $send     : $slider.find( '.spa-chat-msg-send' ),
       $form     : $slider.find( '.spa-chat-msg-form' ),
       $chat_hidden : $slider.find('.spa-chat-closer'),
@@ -213,12 +221,11 @@ spa.chat = (function () {
             + '<span class="spa-chat-msg-sender">'
             + spa.util_b.encodeHtml(person_name) + '(' + spa.util_b.encodeHtml( msg_date ) + ')' 
             + '</span>'
-            + '<span class="spa-chat-msg-wrap">'
-            + spa.util_b.encodeHtml(text) 
-            + '</span>'
+            + '<p class="spa-chat-msg-wrap">'
+            + spa.util_b.encodeHtml(text).replace(/\[(a|b|c|d)_([0-9]+)\]/g,'<img src="'+'images/face/$1/$2.gif" border="0">') .replace( /(\r\n)|\n/g, '</br>' ).replace( /\s/g, '&nbsp;' )
+            + '</p>'
         + '</div>' 
     );
-
     scrollChat();
   };
 
@@ -251,16 +258,18 @@ spa.chat = (function () {
   };
 
   onSubmitMsg = function ( event ) {
-    var msg_text = jqueryMap.$input.val();
-    if ( msg_text.trim() === '' ) { return false; }
-    configMap.chat_model.send_msg( msg_text );
-    jqueryMap.$input.focus();
-    jqueryMap.$send.addClass( 'spa-x-select' );
-    setTimeout(
-      function () { jqueryMap.$send.removeClass( 'spa-x-select' ); },
-      250
-    );
-    return false;
+    if ( (event.type == 'keyup' && event.ctrlKey == true && event.keyCode == 13) || event.type == 'utap') {
+      var msg_text = jqueryMap.$input.val();
+      if ( msg_text.trim() === '' ) { return false; }
+      configMap.chat_model.send_msg( msg_text );
+      jqueryMap.$input.focus();
+      jqueryMap.$send.addClass( 'spa-x-select' );
+      setTimeout(
+        function () { jqueryMap.$send.removeClass( 'spa-x-select' ); },
+        250
+      );
+      return false;
+    }   
   };
 
   onTapList = function ( event ) {
@@ -337,8 +346,6 @@ spa.chat = (function () {
   };
 
   onUpdatechat = function ( event, msg_map ) {
-    console.log( msg_map );
-    console.log(2);
     var
       is_user,
       sender_id = msg_map.sender_id,
@@ -403,8 +410,6 @@ spa.chat = (function () {
 
     //订阅全局事件
     $list_box = jqueryMap.$list_box;
-    console.log(1);
-    $.gevent.unsubscribe( $list_box, 'spa-updatechat' ) ;
     $.gevent.subscribe( $list_box, 'spa-listchange', onListchange );
     $.gevent.subscribe( $list_box, 'spa-setchatee',  onSetchatee  );
     $.gevent.subscribe( $list_box, 'spa-updatechat', onUpdatechat );
@@ -415,8 +420,7 @@ spa.chat = (function () {
     jqueryMap.$head.bind(     'utap', onTapToggle );
     jqueryMap.$list_box.bind( 'utap', onTapList   );
     jqueryMap.$send.bind(     'utap', onSubmitMsg );
-    jqueryMap.$form.bind(   'submit', onSubmitMsg );
-    jqueryMap.$chat_hidden.bind( 'utap', onTapToggle)
+    jqueryMap.$form.bind(   'keyup', onSubmitMsg );
   };
   // End public method /initModule/
 
