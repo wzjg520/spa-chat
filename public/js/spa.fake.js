@@ -3,12 +3,6 @@
  * Fake module
 */
 
-/*jslint         browser : true, continue : true,
-  devel  : true, indent  : 2,    maxerr   : 50,
-  newcap : true, nomen   : true, plusplus : true,
-  regexp : true, sloppy  : true, vars     : false,
-  white  : true
-*/
 /*global $, spa */
 
 spa.fake = (function () {
@@ -57,8 +51,6 @@ spa.fake = (function () {
     emit_sio = function ( msg_type, data ) {
       var person_map, i;
 
-      // Respond to 'adduser' event with 'userupdate'
-      // callback after a 3s delay.
       if ( msg_type === 'adduser' && callback_map.userupdate ) {
         setTimeout( function () {
           person_map = {
@@ -71,8 +63,6 @@ spa.fake = (function () {
         }, 3000 );
       }
 
-      // Respond to 'updatechat' event with an 'updatechat'
-      // callback after a 2s delay. Echo back user info.
       if ( msg_type === 'updatechat' && callback_map.updatechat ) {
         setTimeout( function () {
           var user = spa.model.people.get_user();
@@ -86,7 +76,7 @@ spa.fake = (function () {
       }
 
       if ( msg_type === 'leavechat' ) {
-        // reset login status
+
         delete callback_map.listchange;
         delete callback_map.updatechat;
 
@@ -97,16 +87,13 @@ spa.fake = (function () {
         send_listchange();
       }
 
-      // simulate send of 'updateavatar' message and data to server
       if ( msg_type === 'updateavatar' && callback_map.listchange ) {
-        // simulate receipt of 'listchange' message
         for ( i = 0; i < peopleList.length; i++ ) {
           if ( peopleList[ i ]._id === data.person_id ) {
             peopleList[ i ].css_map = data.css_map;
             break;
           }
         }
-        // execute callback for the 'listchange' message
         callback_map.listchange([ peopleList ]);
       }
     };
@@ -126,8 +113,6 @@ spa.fake = (function () {
       }, 8000 );
     };
 
-    // Try once per second to use listchange callback.
-    // Stop trying after first success.
     send_listchange = function () {
       listchange_idto = setTimeout( function () {
         console.log('fake');
@@ -139,9 +124,6 @@ spa.fake = (function () {
         else { send_listchange(); }
       }, 1000 );
     };
-
-    // We have to start the process ...
-    //send_listchange();
 
     return { emit : emit_sio, on : on_sio };
   }());

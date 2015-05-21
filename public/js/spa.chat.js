@@ -72,8 +72,8 @@ spa.chat = (function () {
       slider_closed_em     : 2,
       slider_opened_title  : '关闭',
       slider_closed_title  : '打开',
-      slider_opened_min_em : 10,
-      window_height_min_em : 20,
+      slider_opened_min_em : 20,
+      window_height_min_em : 40,
 
       chat_model      : null,
       people_model    : null,
@@ -122,9 +122,7 @@ spa.chat = (function () {
       $window   : $(window)
     };
   };
-  // End DOM method /setJqueryMap/
 
-  // Begin DOM method /setPxSizes/
   setPxSizes = function () {
     var px_per_em, window_height_em, opened_height_em;
 
@@ -155,7 +153,6 @@ spa.chat = (function () {
       && configMap.people_model.get_user().get_is_anon()
     ){ return false; }
 
-    // return true if slider already in requested position
     if ( stateMap.position_type === position_type ){
       if ( position_type === 'opened' ) {
         jqueryMap.$input.focus();
@@ -163,7 +160,6 @@ spa.chat = (function () {
       return true;
     }
 
-    // prepare animate parameters
     switch ( position_type ){
       case 'opened' :
         height_px    = stateMap.slider_opened_px;

@@ -38,24 +38,11 @@ spa.util_b = (function () {
     {}, configMap.html_encode_map
   );
   delete configMap.encode_noamp_map['&'];
-  //----------------- END MODULE SCOPE VARIABLES ---------------
 
-  //------------------- BEGIN UTILITY METHODS ------------------
-  // Begin decodeHtml
-  // Decodes HTML entities in a browser-friendly way
-  // See http://stackoverflow.com/questions/1912501/\
-  //   unescape-html-entities-in-javascript
-  //
   decodeHtml = function ( str ) {
     return $('<div/>').html(str || '').text();
   };
-  // End decodeHtml
 
-
-  // Begin encodeHtml
-  // This is single pass encoder for html entities and handles
-  // an arbitrary number of characters
-  //
   encodeHtml = function ( input_arg_str, exclude_amp ) {
     var
       input_str = String( input_arg_str ),
@@ -76,23 +63,17 @@ spa.util_b = (function () {
       }
     );
   };
-  // End encodeHtml
 
-  // Begin getEmSize
-  // returns size of ems in pixels
-  //
   getEmSize = function ( elem ) {
     return Number(
       getComputedStyle( elem, '' ).fontSize.match(/\d*\.?\d*/)[0]
     );
   };
-  // End getEmSize
 
-  // export methods
   return {
     decodeHtml : decodeHtml,
     encodeHtml : encodeHtml,
     getEmSize  : getEmSize
   };
-  //------------------- END PUBLIC METHODS ---------------------
+
 }());

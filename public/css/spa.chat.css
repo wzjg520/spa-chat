@@ -95,7 +95,7 @@
 .spa-chat-msg-log {
   left       : 0em;
   right      : 1em;
-  bottom     : 4em;
+  bottom     : 5em;
   padding    : 0.5em;
   border     : thin solid #888;
   overflow-y : scroll;
@@ -180,7 +180,7 @@
 
 .spa-chat-msg-in {
   position   : absolute;
-  height     : 2em;
+  height     : 3em;
   left       : 0em;
   right      : 1em;
   bottom     : 1em;
@@ -192,13 +192,14 @@ background : #888; */
   position    : absolute;
   right : 25%;
   width       : 65%;
-  height      : 100%;
-  line-height : 2em;
+  height      : 96%;
+  line-height : 2.8em;
   padding     : 0 0.5em;
   border      : 0;
-  background  : #ddd;
+  background  : #fff;
   color       : #666;
   resize: none;
+  border: 1px solid #ccc;
 }
   .spa-chat-msg-in textarea:focus {
     background : #ff8;
@@ -211,7 +212,7 @@ background : #888; */
   right       : 0;
   width       : 25%;
   height      : 100%;
-  line-height : 1.9em;
+  line-height : 3em;
   text-align  : center;
   color       : #fff;
   font-weight : 800;
@@ -232,9 +233,10 @@ background : #888; */
     color: #666;
     float: left;
     font-size: 13px;
-    margin: 5px 0 0;
     outline: medium none;
     position: relative;
     text-decoration: none;
     text-indent: 15px;
+    height: 3em;
+    line-height: 3em;
 }
