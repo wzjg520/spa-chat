@@ -3,17 +3,10 @@
  * Avatar feature module
 */
 
-/*jslint         browser : true, continue : true,
-  devel  : true, indent  : 2,    maxerr   : 50,
-  newcap : true, nomen   : true, plusplus : true,
-  regexp : true, sloppy  : true, vars     : false,
-  white  : true
-*/
 /*global $, spa */
 
 spa.avtr = (function () {
   'use strict';
-  //---------------- BEGIN MODULE SCOPE VARIABLES --------------
   var
     configMap = {
       chat_model   : null,
@@ -41,9 +34,7 @@ spa.avtr = (function () {
     onSetchatee,      onListchange,
     onLogout,
     configModule,     initModule;
-  //----------------- END MODULE SCOPE VARIABLES ---------------
 
-  //------------------- BEGIN UTILITY METHODS ------------------
   getRandRgb = function (){
     var i, rgb_list = [];
     for ( i = 0; i < 3; i++ ){
@@ -51,7 +42,7 @@ spa.avtr = (function () {
     }
     return 'rgb(' + rgb_list.join(',') + ')';
   };
-  //--------------------- BEGIN DOM METHODS --------------------
+
   setJqueryMap = function ( $container ) {
     jqueryMap = { $container : $container };
   };
@@ -70,9 +61,7 @@ spa.avtr = (function () {
       person_id : person_id, css_map : css_map
     });
   };
-  //---------------------- END DOM METHODS ---------------------
 
-  //------------------- BEGIN EVENT HANDLERS -------------------
   onTapNav = function ( event ){
     var css_map,
       $target = $( event.elem_target ).closest('.spa-avtr-box');
@@ -135,17 +124,12 @@ spa.avtr = (function () {
       new_chatee = arg_map.new_chatee,
       old_chatee = arg_map.old_chatee;
 
-    // Use this to highlight avatar of user in nav area
-    // See new_chatee.name, old_chatee.name, etc.
-
-    // remove highlight from old_chatee avatar here
     if ( old_chatee ){
       $nav
         .find( '.spa-avtr-box[data-id=' + old_chatee.cid + ']' )
         .removeClass( 'spa-x-is-chatee' );
     }
 
-    // add highlight to new_chatee avatar here
     if ( new_chatee ){
       $nav
         .find( '.spa-avtr-box[data-id=' + new_chatee.cid + ']' )
@@ -162,7 +146,7 @@ spa.avtr = (function () {
       $box;
 
     $nav.empty();
-    // if the user is logged out, do not render
+
     if ( user.get_is_anon() ){ return false;}
 
     people_db().each( function ( person, idx ){
@@ -190,21 +174,7 @@ spa.avtr = (function () {
   onLogout = function (){
     jqueryMap.$container.empty();
   };
-  //-------------------- END EVENT HANDLERS --------------------
 
-  //------------------- BEGIN PUBLIC METHODS -------------------
-  // Begin public method /configModule/
-  // Example  : spa.avtr.configModule({...});
-  // Purpose  : Configure the module prior to initialization,
-  //   values we do not expect to change during a user session.
-  // Action   :
-  //   The internal configuration data structure (configMap)
-  //   is updated  with provided arguments. No other actions
-  //   are taken.
-  // Returns  : none
-  // Throws   : JavaScript error object and stack trace on
-  //            unacceptable or missing arguments
-  //
   configModule = function ( input_map ) {
     spa.util.setConfigMap({
       input_map    : input_map,
@@ -213,38 +183,25 @@ spa.avtr = (function () {
     });
     return true;
   };
-  // End public method /configModule/
 
-  // Begin public method /initModule/
-  // Example    : spa.avtr.initModule( $container );
-  // Purpose    : Directs the module to begin offering its feature
-  // Arguments  : $container - container to use
-  // Action     : Provides avatar interface for chat users
-  // Returns    : none
-  // Throws     : none
-  //
   initModule = function ( $container ) {
     setJqueryMap( $container );
-    // bind model global events
     $.gevent.subscribe( $container, 'spa-setchatee',  onSetchatee  );
     $.gevent.subscribe( $container, 'spa-listchange', onListchange );
     $.gevent.subscribe( $container, 'spa-logout',     onLogout     );
 
-    // bind actions
     $container
       .bind( 'utap',       onTapNav       )
-      .bind( 'uheldstart', onHeldstartNav )
-      .bind( 'uheldmove',  onHeldmoveNav  )
-      .bind( 'uheldend',   onHeldendNav   );
+      .bind( 'udragstart', onHeldstartNav )
+      .bind( 'udragmove',  onHeldmoveNav  )
+      .bind( 'udragend',   onHeldendNav   );
 
     return true;
   };
-  // End public method /initModule/
 
-  // return public methods
   return {
     configModule : configModule,
     initModule   : initModule
   };
-  //------------------- END PUBLIC METHODS ---------------------
+
 }());
