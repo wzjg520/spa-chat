@@ -53,6 +53,8 @@ spa.chat = (function () {
           + '</div>'
         + '</div>',
 
+      chatHtml : String()  + '<div class="spa-chat-msg-log"></div>',
+
       settable_map : {
         slider_open_time    : true,
         slider_close_time   : true,
@@ -113,6 +115,7 @@ spa.chat = (function () {
       $title    : $slider.find( '.spa-chat-head-title' ),
       $sizer    : $slider.find( '.spa-chat-sizer' ),
       $list_box : $slider.find( '.spa-chat-list-box' ),
+      $msg_box : $slider.find( '.spa-chat-msg' ),
       $msg_log  : $slider.find( '.spa-chat-msg-log' ),
       $msg_in   : $slider.find( '.spa-chat-msg-in' ),
       $input    : $slider.find( '.spa-chat-msg-in textarea'),
@@ -200,7 +203,7 @@ spa.chat = (function () {
   };
 
   scrollChat = function() {
-    var $msg_log = jqueryMap.$msg_log;
+    var $msg_log = jqueryMap.$msg_box.find( '.spa-chat-msg-log:visible' );
     $msg_log.animate(
       { scrollTop : $msg_log.prop( 'scrollHeight' )
         - $msg_log.height()
@@ -209,10 +212,37 @@ spa.chat = (function () {
     );
   };
 
-  writeChat = function ( person_name, text, is_user, msg_date ) {
-    var msg_class = is_user
-      ? 'spa-chat-msg-log-me' : 'spa-chat-msg-log-msg';
-    jqueryMap.$msg_log.append( 
+  writeChat = function ( obj ) {
+     var person_name = obj.sender_name,
+        sender_id = obj.sender_id,
+        dest_id = obj.dest_id,
+       text = obj.text,
+       is_user = obj.is_user,
+       msg_date = obj.msg_date,
+        msg_class = is_user
+        ? 'spa-chat-msg-log-me' : 'spa-chat-msg-log-msg',
+        $dest_msg_log,
+        dest_selector;
+
+      if (  is_user ) {
+        //jqueryMap.$msg_box.find( '.spa-chat-msg-log' ).hide().end().find( '.spa-chat-msg-log[data-id="' + arg_map.new_chatee.id + '"]' ).hide();
+        dest_selector = '.spa-chat-msg-log[data-id="' + dest_id + '"]';
+
+      }
+      else {
+        // if ( jqueryMap.$msg_box.find( '.spa-chat-msg-log[data-id="' + sender_id + '"]' ).length ) {
+        // }
+        // else {
+        //   $dest_msg_log = $( configMap.chatHtml );
+        //   $dest_msg_log.attr( 'data-id', sender_id);
+        //   $dest_msg_log.hide();
+        //   console.log($dest_msg_log);
+        //   jqueryMap.$msg_box.find( '.spa-chat-msg-log' ).eq( 0 ).after( $dest_msg_log );
+        // }
+
+        dest_selector = '.spa-chat-msg-log[data-id="' + sender_id + '"]';
+      }
+    jqueryMap.$msg_box.find( dest_selector ).append( 
          '<div class="' + msg_class + '">'
             + '<span class="spa-chat-msg-sender">'
             + spa.util_b.encodeHtml(person_name) + '(' + spa.util_b.encodeHtml( msg_date ) + ')' 
@@ -225,12 +255,22 @@ spa.chat = (function () {
     scrollChat();
   };
 
-  writeAlert = function ( alert_text ) {
-    jqueryMap.$msg_log.append(
-      '<div class="spa-chat-msg-log-alert">'
-        + spa.util_b.encodeHtml(alert_text)
-      + '</div>'
-    );
+  writeAlert = function ( alert_text, dest_id) {
+    if ( arguments.length = 2 ) {
+       jqueryMap.$msg_box.find('.spa-chat-msg-log[data-id="' + dest_id + '"]').append(
+        '<div class="spa-chat-msg-log-alert">'
+          + spa.util_b.encodeHtml(alert_text)
+        + '</div>'
+      );
+    } 
+    else {
+       jqueryMap.$msg_box.find( '.xpa-chat-msg-log:visible' ).append(
+        '<div class="spa-chat-msg-log-alert">'
+          + spa.util_b.encodeHtml(alert_text)
+        + '</div>'
+      );
+    }
+   
     scrollChat();
   };
 
@@ -270,19 +310,20 @@ spa.chat = (function () {
 
   onTapList = function ( event ) {
     var $tapped  = $( event.elem_target ), chatee_id;
-    if ( ! $tapped.hasClass('spa-chat-list-name') ) { return false; }
-
-    chatee_id = $tapped.attr( 'data-id' );
+    if ( ! ( $tapped.hasClass('spa-chat-list-name') || $tapped.hasClass('spa-chat-msg-notice') ) ) { return false; }
+    chatee_id = $tapped.attr( 'data-id' ) || $tapped.parent().attr( 'data-id' );
     if ( ! chatee_id ) { return false; }
-
-    configMap.chat_model.set_chatee( chatee_id );
+    configMap.chat_model.set_chatee( chatee_id, true );
     return false;
   };
 
   onSetchatee = function ( event, arg_map ) {
     var
       new_chatee = arg_map.new_chatee,
-      old_chatee = arg_map.old_chatee;
+      old_chatee = arg_map.old_chatee,
+      is_utip = arg_map.is_utip,
+      $dest_msg_log,
+      new_msg_num;
 
     jqueryMap.$input.focus();
     if ( ! new_chatee ) {
@@ -296,14 +337,28 @@ spa.chat = (function () {
       return false;
     }
 
-    jqueryMap.$list_box
+    if ( jqueryMap.$msg_box.find( '.spa-chat-msg-log[data-id="' + arg_map.new_chatee.id + '"]' ).length ) {
+        is_utip && jqueryMap.$msg_box.find( '.spa-chat-msg-log' ).hide().end().find( '.spa-chat-msg-log[data-id="' + arg_map.new_chatee.id + '"]' ).show();
+    }
+    else {
+      $dest_msg_log = $( configMap.chatHtml );
+      $dest_msg_log.attr( 'data-id', arg_map.new_chatee.id).hide();
+      jqueryMap.$msg_box.find( '.spa-chat-msg-log' ).eq( 0 ).after( $dest_msg_log );
+      is_utip &&  jqueryMap.$msg_box.find( '.spa-chat-msg-log' ).hide() && $dest_msg_log.show();
+    }
+
+    if ( is_utip ) {
+      jqueryMap.$list_box
       .find( '.spa-chat-list-name' )
       .removeClass( 'spa-x-select' )
       .end()
       .find( '[data-id=' + arg_map.new_chatee.id + ']' )
-      .addClass( 'spa-x-select' );
-
-    writeAlert( '现在和 ' + arg_map.new_chatee.name +' 聊天');
+      .addClass( 'spa-x-select' )
+      .find('.spa-chat-msg-notice').empty();
+      window.localStorage[ 'id_' + arg_map.new_chatee.id ] = 0;
+    }
+    
+    writeAlert( '现在和 ' + arg_map.new_chatee.name +' 聊天', arg_map.new_chatee.id );
     jqueryMap.$title.text( '和 ' + arg_map.new_chatee.name + ' 聊天');
     return true;
   };
@@ -327,7 +382,7 @@ spa.chat = (function () {
       list_html
         += '<div class="spa-chat-list-name'
         +  select_class + '" data-id="' + person.id + '">'
-        +  spa.util_b.encodeHtml( person.name ) + '</div>';
+        +  spa.util_b.encodeHtml( person.name ) + '<span class="spa-chat-msg-notice"></span></div>';
     });
 
     if ( ! list_html ) {
@@ -348,7 +403,8 @@ spa.chat = (function () {
       msg_text  = msg_map.msg_text,
       msg_date = msg_map.date,
       chatee    = configMap.chat_model.get_chatee() || {},
-      sender    = configMap.people_model.get_by_cid( sender_id );
+      sender    = configMap.people_model.get_by_cid( sender_id ),
+      new_msg_num;
 
     if ( ! sender ) {
       writeAlert( msg_text );
@@ -357,11 +413,30 @@ spa.chat = (function () {
 
     is_user = sender.get_is_user();
 
-    if ( ! ( is_user || sender_id === chatee.id ) ) {
+    if ( ! ( is_user  || sender_id === chatee.id ) ) {
       configMap.chat_model.set_chatee( sender_id );
     }
 
-    writeChat( sender.name, msg_text, is_user,msg_date );
+
+
+  if (!is_user && jqueryMap.$msg_box.find( '[data-id=' + msg_map.sender_id + ']' ).is( ':hidden' ) ) {
+      new_msg_num = parseInt( window.localStorage[ 'id_' + msg_map.sender_id ]||0 );
+      new_msg_num += 1;
+      jqueryMap.$list_box
+        .find( '[data-id=' + msg_map.sender_id + ']' )
+        .find( '.spa-chat-msg-notice' ).html(' (' + new_msg_num + ')');
+      window.localStorage[ 'id_' + msg_map.sender_id ] = new_msg_num ;
+    } 
+
+
+    writeChat({
+      sender_id : msg_map.sender_id,
+      dest_id : msg_map.dest_id,
+      sender_name : sender.name,
+      text : msg_text,
+      is_user : is_user,
+      msg_date : msg_date
+    });
 
     if ( is_user ) {
       jqueryMap.$input.val( '' );
@@ -408,7 +483,7 @@ spa.chat = (function () {
     $list_box = jqueryMap.$list_box;
     $.gevent.subscribe( $list_box, 'spa-listchange', onListchange );
     $.gevent.subscribe( $list_box, 'spa-setchatee',  onSetchatee  );
-    $.gevent.subscribe( $list_box, 'spa-updatechat', onUpdatechat );
+    $.gevent.subscribe( $list_box, 'spa-updatechat', onUpdatechat );  //更新消息
     $.gevent.subscribe( $list_box, 'spa-login',      onLogin      );
     $.gevent.subscribe( $list_box, 'spa-logout',     onLogout     );
 

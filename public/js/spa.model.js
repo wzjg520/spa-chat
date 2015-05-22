@@ -193,10 +193,13 @@ spa.model = (function () {
     _publish_updatechat = function ( arg_list ) {
       var msg_map = arg_list[ 0 ];
 
-      if ( ! chatee ) { set_chatee( msg_map.sender_id ); }
-      else if ( msg_map.sender_id !== stateMap.user.id
-        && msg_map.sender_id !== chatee.id
-      ) { set_chatee( msg_map.sender_id ); }
+      if ( ! chatee ) {
+        set_chatee( msg_map.sender_id );
+      }
+      else if ( msg_map.sender_id !== stateMap.user.id && msg_map.sender_id !== chatee.id ) {
+        set_chatee( msg_map.sender_id );
+      }
+
       $.gevent.publish( 'spa-updatechat', [ msg_map ] );
     };
 
@@ -248,20 +251,21 @@ spa.model = (function () {
       return true;
     };
 
-    set_chatee = function ( person_id ) {
+    set_chatee = function ( person_id, is_utip ) {
       var new_chatee;
       new_chatee  = stateMap.people_cid_map[ person_id ];
+
       if ( new_chatee ) {
-        if ( chatee && chatee.id === new_chatee.id ) {
-          return false;
-        }
+        //防止第一次点击无效
+        // if ( chatee && chatee.id === new_chatee.id ) {
+        //   return false;
+        // }
       }
       else {
         new_chatee = null;
       }
-
       $.gevent.publish( 'spa-setchatee',
-        { old_chatee : chatee, new_chatee : new_chatee }
+        { old_chatee : chatee, new_chatee : new_chatee, is_utip : is_utip || false }
       );
       chatee = new_chatee;
       return true;

@@ -177,7 +177,10 @@
     background-color : #fff;
     color            : #444;
   }
-
+.spa-chat-msg-notice{
+  color : red;
+  font-weight: bold;
+}
 .spa-chat-msg-in {
   position   : absolute;
   height     : 3em;
