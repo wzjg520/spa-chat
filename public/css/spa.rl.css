@@ -51,4 +51,8 @@
 .clearfix:after{clear:both;}
 
 
-
+@media screen and (max-width: 450px) {
+	.rl_exp {
+		width: 100%;
+	}
+}

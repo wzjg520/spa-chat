@@ -15,6 +15,7 @@
   right  : 0;
   height : 40px;
 }
+
 .spa-shell-head-logo {
   top    : 4px;
   left   : 8px;
@@ -46,7 +47,7 @@
 .spa-shell-main {
   top    : 40px;
   left   : 0;
-  bottom : 40px;
+  bottom : 0;
   right  : 0;
 }
 .spa-shell-main-content,
@@ -88,4 +89,23 @@
   border-radius : 3px;
   z-index       : 2;
   display       : none;
+}
+
+
+@media all and ( max-width : 800px ) {
+  .spa-shell-head {
+
+  }
+  .spa-shell-head-acct {
+    top : 0px;
+    height : 40px;
+    line-height : 40px;
+    width: 100%;
+  }
+  .spa-shell-main-nav {
+    width : 100%;
+  }
+  .spa-shell-main-content {
+    display : none;
+  }
 }

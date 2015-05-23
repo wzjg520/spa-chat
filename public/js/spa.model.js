@@ -231,7 +231,6 @@ spa.model = (function () {
 
     send_msg = function ( msg_text ) {
       var msg_map,
-        date = new Date(),
         sio = isFakeData ? spa.fake.mockSio : spa.data.getSio();
 
       if ( ! sio ) { return false; }
@@ -241,8 +240,7 @@ spa.model = (function () {
         dest_id   : chatee.id,
         dest_name : chatee.name,
         sender_id : stateMap.user.id,
-        msg_text  : msg_text,
-        date : date.toLocaleString()
+        msg_text  : msg_text
       };
 
       //显示刚发送的信息

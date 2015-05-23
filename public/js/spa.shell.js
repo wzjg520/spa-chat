@@ -157,7 +157,6 @@ spa.shell = (function() {
     if (stateMap.resize_idto) {
       return true;
     }
-
     spa.chat.handleResize();
     stateMap.resize_idto = setTimeout(
       function() {
@@ -230,6 +229,11 @@ spa.shell = (function() {
       .bind('resize', onResize)
       .bind('hashchange', onHashchange)
       .trigger('hashchange');
+      $(window).bind( 'scroll', function () {       
+        setTimeout(function () {  //优化输入法
+            onResize(); 
+        }, 300)
+      } )
 
     $.gevent.subscribe($container, 'spa-login', onLogin);
     $.gevent.subscribe($container, 'spa-logout', onLogout);

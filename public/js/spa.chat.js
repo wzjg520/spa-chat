@@ -8,7 +8,6 @@
 
 spa.chat = (function () {
   'use strict';
-  //---------------- BEGIN MODULE SCOPE VARIABLES --------------
   var
     configMap = {
       main_html : String()
@@ -26,9 +25,9 @@ spa.chat = (function () {
             + '</div>'
             + '<div class="spa-chat-msg">'
               + '<div class="spa-chat-msg-log"></div>'
-              + '<div class="spa-chat-msg-in">'
+            + '</div>'
+            + '<div class="spa-chat-msg-in">'  
                 + '<form class="spa-chat-msg-form">'
-                  + '<textarea id="rl_exp_input"></textarea>'
                 + '<a href="javascript:void(0);" id="rl_exp_btn" class="spa-chat-msg-face">表情<span class="face_arrow_top" style="display: none;"></span></a>'
                 + '<div class="rl_exp" id="rl_bq" style="display: none;">'
                    + ' <ul class="rl_exp_tab clearfix">'
@@ -43,18 +42,19 @@ spa.chat = (function () {
                     + '<ul class="rl_exp_main clearfix" style="display:none;"></ul>'
                     + '<a href="javascript:void(0);" class="close">×</a>'
                 + '</div>'
+                  + '<textarea id="rl_exp_input"></textarea>'
                   + '<input type="submit" style="display:none"/>'
                   + '<div class="spa-chat-msg-send">'
                     + '发送'
                   + '</div>'
                 + '</form>'
-              + '</div>'
-            + '</div>'
+              + '</div>' 
+
+
           + '</div>'
         + '</div>',
 
       chatHtml : String()  + '<div class="spa-chat-msg-log"></div>',
-
       settable_map : {
         slider_open_time    : true,
         slider_close_time   : true,
@@ -135,15 +135,17 @@ spa.chat = (function () {
     );
 
     opened_height_em
-      = window_height_em > configMap.window_height_min_em
+      = window_height_em >= configMap.window_height_min_em
       ? configMap.slider_opened_em
       : configMap.slider_opened_min_em;
 
     stateMap.px_per_em        = px_per_em;
     stateMap.slider_closed_px = configMap.slider_closed_em * px_per_em;
-    stateMap.slider_opened_px = opened_height_em * px_per_em;
+    stateMap.slider_opened_px = opened_height_em * px_per_em; //这里定义spa-chat的高度
+
     jqueryMap.$sizer.css({
-      height : ( opened_height_em - 2 ) * px_per_em
+ //      height : ( opened_height_em - 2 ) * px_per_em
+         height : 'auto'
     });
   };
 
@@ -165,7 +167,8 @@ spa.chat = (function () {
 
     switch ( position_type ){
       case 'opened' :
-        height_px    = stateMap.slider_opened_px;
+//        height_px    = stateMap.slider_opened_px;
+        height_px = '100%'; //默认等于设备高度
         animate_time = configMap.slider_open_time;
         slider_title = configMap.slider_opened_title;
         toggle_text  = '=';
@@ -245,18 +248,18 @@ spa.chat = (function () {
     jqueryMap.$msg_box.find( dest_selector ).append( 
          '<div class="' + msg_class + '">'
             + '<span class="spa-chat-msg-sender">'
-            + spa.util_b.encodeHtml(person_name) + '(' + spa.util_b.encodeHtml( msg_date ) + ')' 
+            + spa.util_b.encodeHtml(person_name) 
             + '</span>'
             + '<p class="spa-chat-msg-wrap">'
             + spa.util_b.encodeHtml(text).replace(/\[(a|b|c|d)_([0-9]+)\]/g,'<img src="'+'images/face/$1/$2.gif" border="0">') .replace( /(\r\n)|\n/g, '</br>' )
             + '</p>'
-        + '</div>' 
+        + '</div><div style="clear:both"></div>' 
     );
     scrollChat();
   };
 
   writeAlert = function ( alert_text, dest_id) {
-    if ( arguments.length = 2 ) {
+    if ( arguments.length == 2 ) {
        jqueryMap.$msg_box.find('.spa-chat-msg-log[data-id="' + dest_id + '"]').append(
         '<div class="spa-chat-msg-log-alert">'
           + spa.util_b.encodeHtml(alert_text)
@@ -302,7 +305,7 @@ spa.chat = (function () {
       jqueryMap.$send.addClass( 'spa-x-select' );
       setTimeout(
         function () { jqueryMap.$send.removeClass( 'spa-x-select' ); },
-        250
+      1000
       );
       return false;
     }   
@@ -318,13 +321,13 @@ spa.chat = (function () {
   };
 
   onSetchatee = function ( event, arg_map ) {
+
     var
       new_chatee = arg_map.new_chatee,
       old_chatee = arg_map.old_chatee,
       is_utip = arg_map.is_utip,
       $dest_msg_log,
       new_msg_num;
-
     jqueryMap.$input.focus();
     if ( ! new_chatee ) {
       if ( old_chatee ) {
@@ -346,7 +349,6 @@ spa.chat = (function () {
       jqueryMap.$msg_box.find( '.spa-chat-msg-log' ).eq( 0 ).after( $dest_msg_log );
       is_utip &&  jqueryMap.$msg_box.find( '.spa-chat-msg-log' ).hide() && $dest_msg_log.show();
     }
-
     if ( is_utip ) {
       jqueryMap.$list_box
       .find( '.spa-chat-list-name' )
@@ -355,10 +357,10 @@ spa.chat = (function () {
       .find( '[data-id=' + arg_map.new_chatee.id + ']' )
       .addClass( 'spa-x-select' )
       .find('.spa-chat-msg-notice').empty();
-      window.localStorage[ 'id_' + arg_map.new_chatee.id ] = 0;
+      window.localStorage[ 'id_' + arg_map.new_chatee.id ] = '0';  
     }
     
-    writeAlert( '现在和 ' + arg_map.new_chatee.name +' 聊天', arg_map.new_chatee.id );
+      writeAlert( '现在和 ' + arg_map.new_chatee.name +' 聊天' + '---' + (new Date).toLocaleString(), arg_map.new_chatee.id );  
     jqueryMap.$title.text( '和 ' + arg_map.new_chatee.name + ' 聊天');
     return true;
   };
@@ -434,8 +436,7 @@ spa.chat = (function () {
       dest_id : msg_map.dest_id,
       sender_name : sender.name,
       text : msg_text,
-      is_user : is_user,
-      msg_date : msg_date
+      is_user : is_user
     });
 
     if ( is_user ) {
@@ -489,7 +490,7 @@ spa.chat = (function () {
 
     // 绑定个人事件
     jqueryMap.$head.bind(     'utap', onTapToggle );
-    jqueryMap.$list_box.bind( 'utap', onTapList   );
+    jqueryMap.$list_box.bind( 'utap', onTapList  );
     jqueryMap.$send.bind(     'utap', onSubmitMsg );
     jqueryMap.$form.bind(   'keyup', onSubmitMsg );
   };
@@ -512,10 +513,12 @@ spa.chat = (function () {
 
   handleResize = function () {
     if ( ! jqueryMap.$slider ) { return false; }
-
     setPxSizes();
     if ( stateMap.position_type === 'opened' ){
-      jqueryMap.$slider.css({ height : stateMap.slider_opened_px });
+      jqueryMap.$slider.css({ 
+        height : stateMap.slider_opened_px
+ //       height :  '100%'
+      });
     }
     return true;
   };
