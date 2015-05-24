@@ -216,13 +216,14 @@ spa.shell = (function() {
     //initModul spa.rl;
     spa.rl.initModule();
     //配置头像模块
-    spa.avtr.configModule({
-      chat_model: spa.model.chat,
-      people_model: spa.model.people
-    });
+    // spa.avtr.configModule({
+    //   chat_model: spa.model.chat,
+    //   people_model: spa.model.people
+    // });
     
     //初始化头像模块
-    spa.avtr.initModule(jqueryMap.$nav);
+    //spa.avtr.initModule(jqueryMap.$nav);
+    
     $(window)
       .bind('resize', onResize)
       .bind('hashchange', onHashchange)
