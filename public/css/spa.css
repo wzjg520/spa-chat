@@ -40,7 +40,7 @@
   body {
     font : 10pt 'Trebuchet MS', Verdana, Helvetica, Arial, sans-serif;
     color            : #444;
-    background-color : #888;
+    background-color : #fff;
   }
   a { text-decoration : none; }
     a:link, a:visited { color : inherit; }
@@ -61,6 +61,8 @@
     min-height : 15em;
     min-width  : 35em;
     overflow   : hidden;
+    background :url(http://cdnq.duitang.com/uploads/item/201311/26/20131126220908_NYuyY.jpeg) no-repeat center;
+    background-size: cover;
   }
 
 @media all and ( max-width : 800px ) {

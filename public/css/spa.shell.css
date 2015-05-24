@@ -21,6 +21,7 @@
   left   : 8px;
   height : 32px;
   width  : 128px;
+  color: #fff;
 }
   .spa-shell-head-logo h1 {
     font   : 800 22px/22px Arial, Helvetica, sans-serif;
@@ -37,7 +38,7 @@
   width         : 210px;
   height        : 32px;
   line-height   : 32px;
-  background    : #888;
+  background    : #1571EA;
   color         : #fff;
   text-align    : center;
   cursor        : pointer;
@@ -49,6 +50,7 @@
   left   : 0;
   bottom : 0;
   right  : 0;
+  display: none;
 }
 .spa-shell-main-content,
 .spa-shell-main-nav {

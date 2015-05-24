@@ -101,7 +101,8 @@ spa.chat = (function () {
     onLogin,       onLogout, onClearmsg,
     configModule,  initModule,
     removeSlider,  handleResize,
-    onHeldstartMsgbox, onHeldmoveMsgbox, onHeldendMsgbox;
+    onHeldstartMsgbox, onHeldmoveMsgbox, onHeldendMsgbox,
+    onTapClose;
   //----------------- 模块作用域变量end ---------------
 
 
@@ -298,12 +299,15 @@ spa.chat = (function () {
     else if ( stateMap.position_type === 'closed' ){
       set_chat_anchor( 'opened' );
     }
-    
-    if ( event.target == jqueryMap.$chat_hidden[ 0 ] ) {
-        set_chat_anchor('hidden');
-    }
+    // if ( event.target == jqueryMap.$chat_hidden[ 0 ] ) {
+    //     set_chat_anchor('closed');
+    // }
     return false;
   };
+
+  onTapClose = function ( event ) {
+    configMap.set_chat_anchor( 'closed' );
+  }
 
   onSubmitMsg = function ( event ) {
     if ( (event.type == 'keyup' && event.ctrlKey == true && event.keyCode == 13) || event.type == 'utap') {
@@ -521,6 +525,7 @@ spa.chat = (function () {
     jqueryMap.$list_box.bind( 'utap', onTapList  );
     jqueryMap.$send.bind(     'utap', onSubmitMsg );
     jqueryMap.$form.bind(   'keyup', onSubmitMsg );
+    jqueryMap.$chat_hidden.bind( 'utap', onTapClose );  //close
 
     //绑定滚动条事件
       jqueryMap.$msg_box
