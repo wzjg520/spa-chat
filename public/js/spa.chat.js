@@ -299,9 +299,9 @@ spa.chat = (function () {
       set_chat_anchor( 'opened' );
     }
     
-    // if ( event.target == jqueryMap.$chat_hidden[ 0 ] ) {
-    //     set_chat_anchor('hidden');
-    // }
+    if ( event.target == jqueryMap.$chat_hidden[ 0 ] ) {
+        set_chat_anchor('hidden');
+    }
     return false;
   };
 
@@ -339,7 +339,7 @@ spa.chat = (function () {
     jqueryMap.$input.focus();
     if ( ! new_chatee ) {
       if ( old_chatee ) {
-        writeAlert( old_chatee.name + ' 已经离开聊天室' );
+        writeAlert( old_chatee.name + ' 已经离开聊天室', old_chatee.id );
       }
       else {
         writeAlert( '你的朋友已经离开聊天室' );
