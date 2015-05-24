@@ -213,23 +213,21 @@ spa.shell = (function() {
     });
     //初始化spa.chat模块
     spa.chat.initModule(jqueryMap.$container);
-
     //initModul spa.rl;
     spa.rl.initModule();
-
     //配置头像模块
     spa.avtr.configModule({
       chat_model: spa.model.chat,
       people_model: spa.model.people
     });
+    
     //初始化头像模块
     spa.avtr.initModule(jqueryMap.$nav);
-
     $(window)
       .bind('resize', onResize)
       .bind('hashchange', onHashchange)
       .trigger('hashchange');
-      $(window).bind( 'scroll', function () {       
+      $( window ).bind( 'scroll', function () {       
         setTimeout(function () {  //优化输入法
             onResize(); 
         }, 300)
@@ -240,7 +238,7 @@ spa.shell = (function() {
 
     jqueryMap.$acct
       .text('请登录')
-      .bind('utap', onTapAcct);
+      .bind('utap', onTapAcct );
   };
 
   return {

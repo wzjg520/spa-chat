@@ -83,6 +83,8 @@ spa.chat = (function () {
     },
     stateMap  = {
       $append_target   : null,
+      $drag_target : null,
+      drag_map : null,
       position_type    : 'closed',
       px_per_em        : 0,
       slider_hidden_px : 0,
@@ -98,7 +100,8 @@ spa.chat = (function () {
     onSetchatee,   onUpdatechat, onListchange,
     onLogin,       onLogout, onClearmsg,
     configModule,  initModule,
-    removeSlider,  handleResize;
+    removeSlider,  handleResize,
+    onHeldstartMsgbox, onHeldmoveMsgbox, onHeldendMsgbox;
   //----------------- 模块作用域变量end ---------------
 
 
@@ -168,11 +171,17 @@ spa.chat = (function () {
     switch ( position_type ){
       case 'opened' :
 //        height_px    = stateMap.slider_opened_px;
-        height_px = '100%'; //默认等于设备高度
+       
+
+        if( $( window ).scrollTop() > 1 ) {
+          height_px    = stateMap.slider_opened_px;
+        }
+        else {
+           height_px = '100%'; //默认等于设备高度
+        } 
         animate_time = configMap.slider_open_time;
         slider_title = configMap.slider_opened_title;
         toggle_text  = '=';
-        jqueryMap.$input.focus();
       break;
 
       case 'hidden' :
@@ -321,7 +330,6 @@ spa.chat = (function () {
   };
 
   onSetchatee = function ( event, arg_map ) {
-
     var
       new_chatee = arg_map.new_chatee,
       old_chatee = arg_map.old_chatee,
@@ -467,6 +475,26 @@ spa.chat = (function () {
     return true;
   };
 
+  onHeldstartMsgbox = function ( e ) {
+     var
+      $target = $( e.elem_target ).closest('.spa-chat-msg-log');
+      
+      if ( $target.length === 0 ){ return false; }
+      stateMap.$drag_target = $target;
+      stateMap.drag_map = { top : -$target.scrollTop() };
+  };
+  onHeldmoveMsgbox = function ( e ) {
+    var drag_map = stateMap.drag_map;
+    if ( ! drag_map ){ return false; }
+
+    drag_map.top  += e.px_delta_y;
+    stateMap.$drag_target.scrollTop( -drag_map.top );
+  };
+  onHeldendMsgbox = function ( e ) {
+    var $drag_target = stateMap.$drag_target;
+    if ( ! $drag_target ){ return false; }
+  };
+
   initModule = function ( $append_target ) {
     var $list_box;
 
@@ -493,6 +521,13 @@ spa.chat = (function () {
     jqueryMap.$list_box.bind( 'utap', onTapList  );
     jqueryMap.$send.bind(     'utap', onSubmitMsg );
     jqueryMap.$form.bind(   'keyup', onSubmitMsg );
+
+    //绑定滚动条事件
+      jqueryMap.$msg_box
+      .bind( 'udragstart', onHeldstartMsgbox )
+      .bind( 'udragmove',  onHeldmoveMsgbox  )
+      .bind( 'udragend',   onHeldendMsgbox   );
+
   };
 
   removeSlider = function () {

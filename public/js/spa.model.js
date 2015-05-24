@@ -31,7 +31,7 @@ spa.model = (function () {
   };
 
   makeCid = function () {
-    return 'c' + String( stateMap.cid_serial++ );
+    return 'c' + stateMap.cid_serial++ ;
   };
 
   clearPeopleDb = function () {

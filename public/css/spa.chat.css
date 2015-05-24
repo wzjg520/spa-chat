@@ -254,7 +254,7 @@ left: 42px; */
 
 .spa-chat-msg-form {
   position: absolute;
-top: 0px;
+  top: 0px;
   bottom: 0px;
   left: 0px;
   width: 100%;
@@ -264,7 +264,6 @@ top: 0px;
   .spa-chat {
     width         : 100%;
   }
-
   .spa-chat-list-box {
     border-radius: 0;
   }
